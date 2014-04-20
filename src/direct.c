@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdint.h>
 #include "mruby.h"
 
@@ -15,8 +16,23 @@ mrb_direct_write8(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint8_t *)(mrb_fixnum(argv[0]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint8_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint8_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		dat = (uint8_t)(mrb_fixnum(argv[1]));
+
 		*addr = dat;
 	}
 	else
@@ -41,8 +57,23 @@ mrb_direct_set_bit8(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint8_t *)(mrb_fixnum(argv[0]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint8_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint8_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		dat = (uint8_t)(mrb_fixnum(argv[1]));
+
 		*addr |= dat;
 	}
 	else
@@ -67,8 +98,23 @@ mrb_direct_clear_bit8(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint8_t *)(mrb_fixnum(argv[0]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint8_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint8_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		dat = (uint8_t)(mrb_fixnum(argv[1]));
+
 		*addr &= ~dat;
 	}
 	else
@@ -93,8 +139,23 @@ mrb_direct_write16(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint16_t *)(mrb_fixnum(argv[0]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint16_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint16_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		dat = (uint16_t)(mrb_fixnum(argv[1]));
+
 		*addr = dat;
 	}
 	else
@@ -119,8 +180,23 @@ mrb_direct_set_bit16(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint16_t *)(mrb_fixnum(argv[0]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint16_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint16_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		dat = (uint16_t)(mrb_fixnum(argv[1]));
+
 		*addr |= dat;
 	}
 	else
@@ -145,8 +221,23 @@ mrb_direct_clear_bit16(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint16_t *)(mrb_fixnum(argv[0]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint16_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint16_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		dat = (uint16_t)(mrb_fixnum(argv[1]));
+
 		*addr &= ~dat;
 	}
 	else
@@ -171,8 +262,35 @@ mrb_direct_write32(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint32_t *)(mrb_fixnum(argv[0]));
-		dat = (uint32_t)(mrb_fixnum(argv[1]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint32_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint32_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
+		if (mrb_fixnum_p(argv[1]))
+		{
+			dat = (uint32_t)(mrb_cptr(argv[1]));
+		}
+		else
+		if (mrb_float_p(argv[1]))
+		{
+			dat = (uint32_t)(mrb_float(argv[1]));
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		*addr = dat;
 	}
 	else
@@ -197,8 +315,35 @@ mrb_direct_set_bit32(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint32_t *)(mrb_fixnum(argv[0]));
-		dat = (uint32_t)(mrb_fixnum(argv[1]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint32_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint32_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
+		if (mrb_fixnum_p(argv[1]))
+		{
+			dat = (uint32_t)(mrb_fixnum(argv[1]));
+		}
+		else
+		if (mrb_float_p(argv[1]))
+		{
+			dat = (uint32_t)(mrb_float(argv[1]));
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		*addr |= dat;
 	}
 	else
@@ -223,8 +368,35 @@ mrb_direct_clear_bit32(mrb_state *mrb, mrb_value self)
 
 	if (iargc == 2)
 	{
-		addr = (volatile uint32_t *)(mrb_fixnum(argv[0]));
-		dat = (uint32_t)(mrb_fixnum(argv[1]));
+		if (mrb_fixnum_p(argv[0]))
+		{
+			addr = (volatile uint32_t *)(mrb_cptr(argv[0]));
+		}
+		else
+		if (mrb_float_p(argv[0]))
+		{
+			uint32_t tmp = (volatile uint32_t)(mrb_float(argv[0]));
+			addr = (volatile uint32_t *)tmp;
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
+		if (mrb_fixnum_p(argv[1]))
+		{
+			dat = (uint32_t)(mrb_fixnum(argv[1]));
+		}
+		else
+		if (mrb_float_p(argv[1]))
+		{
+			dat = (uint32_t)(mrb_float(argv[1]));
+		}
+		else
+		{
+			mrb_raise(mrb, E_ARGUMENT_ERROR, "wrong argument");
+		}
+
 		*addr &= ~dat;
 	}
 	else
